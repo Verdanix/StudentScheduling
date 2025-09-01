@@ -1,25 +1,29 @@
-# Contributing to [NAME]: Guidelines for Developers, Tinkerers, and End Users
+# Contributing to StudentScheduling: Guidelines for Developers, Tinkerers, and End Users
 
-Welcome to [NAME]'s open-source community! I'm excited to have you on board as we work together to create <add more here>
+Welcome to StudentScheduling's open-source community!
+I'm excited to have you on board as we work together to create secure,
+efficiency, and privacy focused scheduling software for student-run stores.
 
 ## Getting Started
 Before diving into the contributing guidelines, please take a moment to familiarize yourself with my project:
-- Visit the [README.md](./README.md) for an overview of [NAME] features and capabilities.
+- Visit the [README.md](./README.md) for an overview of StudentScheduling features and capabilities.
 - Review the [LICENSE](./LICENSE) to understand the terms of use.
 - Review the [CODE OF CONDUCT](./CODE_OF_CONDUCT.md) to understand how to be safe in the community.
 
 ## Code Styles Guidelines
 To ensure consistency throughout the project, please follow these code styles guidelines:
-- **Style Guide**: [NAME] utilizes <insert style guide here> for coding standards. Please familiarize yourself with their guidelines for writing clean, readable, and maintainable code.
-- **Documentation**: Use comments to document all <classes, methods, constructors, and variables>. Documentation should be consistently written and informative as to why certain choices are made and the impact.
+- **Style Guide**: Prettier for enforcing coding standards.
+- **Documentation**: Use comments to document all classes, methods, constructors, and variables. Documentation should be consistently written and informative as to why certain choices are made and the impact.
 
 ## Tech Stack
-[NAME]'s tech stack is based on the following dependencies:
-- **Module Name**: Utilize <tech> for <purpose>
+StudentScheduling's tech stack is based on the following dependencies:
+- **Backend**: Utilize NextJS for server-side rendering and API routes.
+- **Frontend**: Utilize React and Tailwind for building user interfaces.
+- **Calendar Creation**: Utilize ICS for generating iCal files.
 
 ## Testing
 To ensure the codebase remains reliable and maintainable, I follow a rigorous testing approach:
-- **Automated Testing**: Employ automated testing with <tech> to increase efficiency and reduce manual effort.
+- **Automated Testing**: Employ automated testing with JEST to increase efficiency and reduce manual effort.
 - **Unit Testing**: Conduct unit testing for individual components to validate internal logic.
 - **Integration Testing**: Perform integration testing for combined functionality to ensure seamless interactions between components.
 - **System Testing**: Conduct system testing for the entire system behavior to evaluate responsiveness, reliability, and capacity.

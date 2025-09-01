@@ -1,6 +1,6 @@
 # Security Policy
 
-[NAME] is committed to maintaining the security and integrity of my open-source projects. Everyone appreciates your help in keeping [NAME] secure.
+StudentScheduling is committed to maintaining the security and integrity of my open-source projects. Everyone appreciates your help in keeping StudentScheduling secure.
 
 ## Supported Versions
 
@@ -12,7 +12,7 @@ TODO: List supported versions
 
 If you discover a potential security vulnerability in our project, please report it to me privately. Here's how:
 
-1. Email me [[SECURITY_EMAIL]](mailto:[SECURITY_EMAIL])
+1. Email me [security@masonroot.dev](mailto:security@masonroot.dev)
 2. Include as much detail as possible about the vulnerability
 3. I'll respond within **5 days** to acknowledge receipt of your report
 
