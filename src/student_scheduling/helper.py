@@ -1,9 +1,10 @@
 """Helper functions for the scheduling algorithm."""
 
 import datetime
+from io import StringIO
 
 import magic
-from fastapi import UploadFile
+import pandas as pd
 
 
 def filter_weekends(dates: list[datetime.date]) -> list[datetime.date]:
@@ -64,17 +65,14 @@ def get_days(start_day: datetime.date, end_day: datetime.date) -> list[datetime.
     return [start_day + datetime.timedelta(days=i) for i in range(delta.days + 1)]
 
 
-async def is_safe_csv_file(file: UploadFile) -> bool:
+def is_safe_csv_file(content: bytes) -> bool:
     """Check if the uploaded file is a safe CSV file. This is the first layer of safety
 
     Args:
-        file (UploadFile): The uploaded file to check.
+        content (bytes): The file to check in bytes.
     Returns:
         bool: True if the file is a safe CSV file, False otherwise.
     """
-
-    content = await file.read()
-    content.seek(0)
 
     max_file_size = 15 * 1024 * 1024  # 15 MB
 
@@ -84,5 +82,21 @@ async def is_safe_csv_file(file: UploadFile) -> bool:
     file_type = magic.from_buffer(content, mime=True)
 
     accepted_mimes = ["text/csv"]
-
     return file_type in accepted_mimes
+
+
+def csv_has_2_columns(content: bytes) -> bool:
+    """Check if the uploaded CSV file has exactly 2 columns. This is the second layer of safety.
+
+    Args:
+        content (bytes): The CSV file to check.
+    Returns:
+        bool: True if the file has exactly 2 columns, False otherwise.
+    """
+
+    try:
+        df = pd.read_csv(StringIO(content.decode("utf-8")))
+        print(df.shape[1])
+        return df.shape[1] == 2
+    except Exception:
+        return False

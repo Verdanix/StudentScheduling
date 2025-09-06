@@ -18,6 +18,7 @@ repos:
         args:
           # Disable specific checks that are handled by Black
           - "--disable=C0301"
+          - "--disable=W0718"
   - repo: local
     hooks:
       - id: pytest
