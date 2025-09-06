@@ -64,13 +64,13 @@ def get_days(start_day: datetime.date, end_day: datetime.date) -> list[datetime.
     return [start_day + datetime.timedelta(days=i) for i in range(delta.days + 1)]
 
 
-async def is_safe_excel_file(file: UploadFile) -> bool:
-    """Check if the uploaded file is a safe Excel file. This is the first layer of safety
+async def is_safe_csv_file(file: UploadFile) -> bool:
+    """Check if the uploaded file is a safe CSV file. This is the first layer of safety
 
     Args:
         file (UploadFile): The uploaded file to check.
     Returns:
-        bool: True if the file is a safe Excel file, False otherwise.
+        bool: True if the file is a safe CSV file, False otherwise.
     """
 
     content = await file.read()
@@ -83,9 +83,6 @@ async def is_safe_excel_file(file: UploadFile) -> bool:
 
     file_type = magic.from_buffer(content, mime=True)
 
-    accepted_mimes = [
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  # for .xlsx files
-        "application/vnd.ms-excel",  # for older .xls files
-    ]
+    accepted_mimes = ["text/csv"]
 
     return file_type in accepted_mimes
