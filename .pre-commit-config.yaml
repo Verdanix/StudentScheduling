@@ -14,15 +14,8 @@ repos:
     hooks:
       - id: pylint
         name: pylint-py
+        language: system
         args:
           # Disable specific checks that are handled by Black
-          - "--disable=C0301,R0801,W0201"
-          # Set custom rules for variable and attribute names
-          - "--variable-rgx=[a-z_][a-z0-9_]{1,30}$"
-          - "--attr-rgx=[a-zA-Z_][a-zA-Z0-9_]{1,30}$"
-          - "--argument-rgx=[a-z_][a-z0-9_]{1,30}$"
-          # Exclude specific packages from certain checks
-          - "--generated-members=torch.*,pandas.*,Levenshtein.*"
-          # Set limits for code complexity
-          - "--max-locals=25"
-          - "--max-attributes=20"
+          - "--disable=C0301"
+
