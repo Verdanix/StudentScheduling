@@ -1,11 +1,18 @@
 import datetime
+from pathlib import Path
 
-from src.student_scheduling.helper import get_days, filter_days, filter_excluded_dates
+from src.student_scheduling.helper import get_days, filter_days, filter_excluded_dates, is_safe_csv_file
+from student_scheduling.helper import csv_has_2_columns
 
 ranges = {
     1: [datetime.date(2025, 9, 1), datetime.date(2025, 9, 30)],
     2: [datetime.date(2025, 10, 1), datetime.date(2025, 10, 31)],
     3: [datetime.date(2025, 11, 1), datetime.date(2025, 11, 30)],
+}
+
+csv = {
+    "bad": Path("tests/bad.csv").read_bytes(),
+    "good": Path("tests/good.csv").read_bytes(),
 }
 
 
@@ -65,3 +72,13 @@ def test_filter_days():
         print("Range ID:", range_id, "Filtered Days Length:", len(days))
         assert all(day not in excluded_dates for day in days)
         assert all(day.weekday() < 5 for day in days)
+
+
+def test_is_safe_csv():
+    assert is_safe_csv_file(csv["good"])
+    assert is_safe_csv_file(csv["bad"])
+
+
+def test_has_2_columns_exactly():
+    assert csv_has_2_columns(csv["good"])
+    assert not csv_has_2_columns(csv["bad"])
