@@ -2,6 +2,9 @@
 
 import datetime
 
+import magic
+from fastapi import UploadFile
+
 
 def filter_weekends(dates: list[datetime.date]) -> list[datetime.date]:
     """Filter out weekends from a list of dates.
@@ -59,3 +62,30 @@ def get_days(start_day: datetime.date, end_day: datetime.date) -> list[datetime.
     """
     delta = end_day - start_day
     return [start_day + datetime.timedelta(days=i) for i in range(delta.days + 1)]
+
+
+async def is_safe_excel_file(file: UploadFile) -> bool:
+    """Check if the uploaded file is a safe Excel file. This is the first layer of safety
+
+    Args:
+        file (UploadFile): The uploaded file to check.
+    Returns:
+        bool: True if the file is a safe Excel file, False otherwise.
+    """
+
+    content = await file.read()
+    content.seek(0)
+
+    max_file_size = 15 * 1024 * 1024  # 15 MB
+
+    if len(content) > max_file_size:
+        return False
+
+    file_type = magic.from_buffer(content, mime=True)
+
+    accepted_mimes = [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  # for .xlsx files
+        "application/vnd.ms-excel",  # for older .xls files
+    ]
+
+    return file_type in accepted_mimes
