@@ -1,0 +1,26 @@
+[project]
+name = "student-scheduling"
+version = "0.1.0"
+description = "Fast and efficient shift scheduling for student-run stores. Mainly built for my high school."
+authors = [
+    {name = "Mason Root",email = "contact@masonroot.dev"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    'icalendar',
+    'openpyxl',
+    'python-multipart',
+    'fastapi[standard]',
+    'black',
+    'pylint',
+    "pre-commit (>=4.3.0,<5.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "student_scheduling", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
