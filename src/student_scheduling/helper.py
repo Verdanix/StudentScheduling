@@ -100,3 +100,14 @@ def csv_has_2_columns(content: bytes) -> bool:
         return df.shape[1] == 2
     except Exception:
         return False
+
+
+def csv_is_safe(content: bytes) -> bool:
+    """Check if the uploaded CSV file is safe by verifying its MIME type and column count.
+
+    Args:
+        content (bytes): The CSV file to check.
+    Returns:
+        bool: True if the file is safe, False otherwise.
+    """
+    return is_safe_csv_file(content) and csv_has_2_columns(content)

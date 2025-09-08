@@ -82,3 +82,7 @@ def test_is_safe_csv():
 def test_has_2_columns_exactly():
     assert csv_has_2_columns(csv["good"])
     assert not csv_has_2_columns(csv["bad"])
+
+def test_safe_csv():
+    assert is_safe_csv_file(csv["good"])
+    assert is_safe_csv_file(csv["bad"])
