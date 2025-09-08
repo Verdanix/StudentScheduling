@@ -65,7 +65,7 @@ def get_days(start_day: datetime.date, end_day: datetime.date) -> list[datetime.
     return [start_day + datetime.timedelta(days=i) for i in range(delta.days + 1)]
 
 
-def is_safe_csv_file(content: bytes) -> bool:
+def csv_has_csv_mime_type(content: bytes) -> bool:
     """Check if the uploaded file is a safe CSV file. This is the first layer of safety
 
     Args:
@@ -110,4 +110,4 @@ def csv_is_safe(content: bytes) -> bool:
     Returns:
         bool: True if the file is safe, False otherwise.
     """
-    return is_safe_csv_file(content) and csv_has_2_columns(content)
+    return csv_has_csv_mime_type(content) and csv_has_2_columns(content)

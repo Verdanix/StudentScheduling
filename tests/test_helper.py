@@ -1,7 +1,7 @@
 import datetime
 from pathlib import Path
 
-from src.student_scheduling.helper import get_days, filter_days, filter_excluded_dates, is_safe_csv_file
+from src.student_scheduling.helper import get_days, filter_days, filter_excluded_dates, csv_has_csv_mime_type
 from student_scheduling.helper import csv_has_2_columns
 
 ranges = {
@@ -75,8 +75,8 @@ def test_filter_days():
 
 
 def test_is_safe_csv():
-    assert is_safe_csv_file(csv["good"])
-    assert is_safe_csv_file(csv["bad"])
+    assert csv_has_csv_mime_type(csv["good"])
+    assert csv_has_csv_mime_type(csv["bad"])
 
 
 def test_has_2_columns_exactly():
@@ -84,5 +84,5 @@ def test_has_2_columns_exactly():
     assert not csv_has_2_columns(csv["bad"])
 
 def test_safe_csv():
-    assert is_safe_csv_file(csv["good"])
-    assert is_safe_csv_file(csv["bad"])
+    assert csv_has_csv_mime_type(csv["good"])
+    assert csv_has_csv_mime_type(csv["bad"])
