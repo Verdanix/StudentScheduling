@@ -1,8 +1,9 @@
 import datetime
 from pathlib import Path
 
+from numpy._core._multiarray_umath import ndarray
 from src.student_scheduling.helper import get_days, filter_days, filter_excluded_dates, csv_has_csv_mime_type
-from student_scheduling.helper import csv_has_2_columns
+from student_scheduling.helper import csv_has_2_columns, get_students
 
 ranges = {
     1: [datetime.date(2025, 9, 1), datetime.date(2025, 9, 30)],
@@ -83,6 +84,15 @@ def test_has_2_columns_exactly():
     assert csv_has_2_columns(csv["good"])
     assert not csv_has_2_columns(csv["bad"])
 
+
 def test_safe_csv():
     assert csv_has_csv_mime_type(csv["good"])
     assert csv_has_csv_mime_type(csv["bad"])
+
+
+def test_is_valid_data_structure():
+    students = get_students(csv['good'], csv['good'])
+    assert len(students.keys()) == 2
+    assert type(students) is dict
+    assert type(students['a']) is list
+    assert type(students['b']) is list
