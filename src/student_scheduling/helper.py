@@ -111,3 +111,19 @@ def csv_is_safe(content: bytes) -> bool:
         bool: True if the file is safe, False otherwise.
     """
     return csv_has_csv_mime_type(content) and csv_has_2_columns(content)
+
+
+def get_students(a_day: bytes, b_day: bytes) -> dict[str, list]:
+    """Extract student data from two CSV files.
+
+    Args:
+        a_day (bytes): The A day CSV file in bytes.
+        b_day (bytes): The B day CSV file in bytes.
+    Returns:
+        dict[str, list[list[str, int]]]: A dictionary with keys 'a' and 'b' containing student data.
+    """
+
+    a_day_students = pd.read_csv(StringIO(a_day.decode("utf-8"))).values.tolist()
+    b_day_students = pd.read_csv(StringIO(b_day.decode("utf-8"))).values.tolist()
+
+    return {"a": a_day_students, "b": b_day_students}
