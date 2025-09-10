@@ -3,8 +3,9 @@
 import datetime
 import random
 from io import StringIO
-
 from itertools import cycle
+
+import icalendar
 import magic
 import pandas as pd
 
@@ -184,3 +185,27 @@ def schedule_shifts(
     b_day_schedule = get_schedule(students["b"], total_needed_employees, 1)
     merged_dict = {**a_day_schedule, **b_day_schedule}
     return dict(sorted(merged_dict.items()))
+
+
+def create_ics_file(schedule: dict, month: int, year: int) -> bytes:
+    """Create an ICS file from the schedule.
+
+    Args:
+        schedule (dict): A dictionary mapping each date to a list of scheduled students.
+        month (int): The month for the schedule.
+        year (int): The year for the schedule.
+    Returns:
+        bytes: The ICS file in bytes.
+    """
+    calendar = icalendar.Calendar()
+    # Compress the schedule data into a list of (day, student) tuples. Little cleaner
+    compressed_data = [
+        (day, student) for day, students in schedule.items() for student in students
+    ]
+    for day, student in compressed_data:
+        event = icalendar.Event()
+        event.add("summary", student)
+        event.add("dtstart", datetime.date(year, month, day))
+        event.add("dtend", datetime.date(year, month, day))
+        calendar.add_component(event)
+    return calendar.to_ical()
