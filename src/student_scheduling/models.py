@@ -5,6 +5,8 @@ import datetime
 from fastapi import UploadFile
 from pydantic import BaseModel
 
+from student_scheduling.helper import csv_is_safe
+
 
 class HallPass(BaseModel):
     """
@@ -85,3 +87,28 @@ class Submission(BaseModel):
     ics: bool = True
     store_name: str
     hall_pass: HallPass = HallPass(signature_required=False)
+
+    def read_submissions(self) -> tuple:
+        """Read the uploaded files from the submission.
+
+        Returns:
+            tuple: A tuple containing the contents of the A-day and B-day files as bytes.
+        """
+        return self.a_day.read(), self.b_day.read()
+
+    @staticmethod
+    def validate_csv(a_day: bytes, b_day: bytes) -> None:
+        """Validate the uploaded CSV files to ensure they are safe and usable.
+
+        Args:
+            a_day (bytes): The content of the A-day CSV file.
+            b_day (bytes): The content of the B-day CSV file.
+        Raises:
+            ValueError: If either of the uploaded files is not a usable CSV file.
+        """
+        a_day_safe = csv_is_safe(a_day)
+        b_day_safe = csv_is_safe(b_day)
+        if not a_day_safe or not b_day_safe:
+            raise ValueError(
+                "One or both of the uploaded files are not usable CSV files."
+            )
