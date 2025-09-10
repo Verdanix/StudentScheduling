@@ -1,8 +1,11 @@
 import datetime
 from pathlib import Path
 
+import pytest
+
 from src.student_scheduling.helper import get_days, filter_days, filter_excluded_dates, csv_has_csv_mime_type
 from student_scheduling.helper import csv_has_2_columns, get_students, schedule_shifts
+from student_scheduling.models import Submission
 
 ranges = {
     1: [datetime.date(2025, 9, 1), datetime.date(2025, 9, 30)],
@@ -89,6 +92,12 @@ def test_has_2_columns_exactly():
 def test_safe_csv():
     assert csv_has_csv_mime_type(csv["good"])
     assert csv_has_csv_mime_type(csv["bad"])
+
+
+def test_validate_csv():
+    assert Submission.validate_csv(csv['good'], csv['good']) is None
+    with pytest.raises(ValueError) as info:
+        Submission.validate_csv(csv['good'], csv['bad'])
 
 
 def test_is_valid_data_structure():
