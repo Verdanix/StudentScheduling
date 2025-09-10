@@ -12,8 +12,8 @@ ranges = {
 }
 
 csv = {
-    "bad": Path("tests/bad.csv").read_bytes(),
-    "good": Path("tests/good.csv").read_bytes(),
+    "bad": Path("tests/files/bad.csv").read_bytes(),
+    "good": Path("tests/files/good.csv").read_bytes(),
 }
 
 
