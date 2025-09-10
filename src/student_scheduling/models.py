@@ -112,3 +112,8 @@ class Submission(BaseModel):
             raise ValueError(
                 "One or both of the uploaded files are not usable CSV files."
             )
+
+    def swap_dates_if_necessary(self) -> None:
+        """Swap start_date and end_date if start_date is later than end_date."""
+        if self.start_date > self.end_date:
+            self.start_date, self.end_date = self.end_date, self.start_date
