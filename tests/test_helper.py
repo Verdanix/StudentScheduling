@@ -1,9 +1,8 @@
 import datetime
 from pathlib import Path
 
-from numpy._core._multiarray_umath import ndarray
 from src.student_scheduling.helper import get_days, filter_days, filter_excluded_dates, csv_has_csv_mime_type
-from student_scheduling.helper import csv_has_2_columns, get_students
+from student_scheduling.helper import csv_has_2_columns, get_students, schedule_shifts
 
 ranges = {
     1: [datetime.date(2025, 9, 1), datetime.date(2025, 9, 30)],
@@ -14,6 +13,8 @@ ranges = {
 csv = {
     "bad": Path("tests/files/bad.csv").read_bytes(),
     "good": Path("tests/files/good.csv").read_bytes(),
+    "a": Path("tests/files/a_day.csv").read_bytes(),
+    "b": Path("tests/files/b_day.csv").read_bytes(),
 }
 
 
@@ -96,3 +97,13 @@ def test_is_valid_data_structure():
     assert type(students) is dict
     assert type(students['a']) is list
     assert type(students['b']) is list
+
+
+def test_scheduling_output_datatype():
+    students = get_students(csv['a'], csv['b'])
+    min_daily_employees = 5
+    for start, end in ranges.values():
+        days = get_days(start, end)
+        days = filter_days(days, [])
+        schedule = schedule_shifts(students, days, min_daily_employees)
+        assert type(schedule) is dict
