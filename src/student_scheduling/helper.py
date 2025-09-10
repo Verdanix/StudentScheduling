@@ -1,8 +1,10 @@
 """Helper functions for the scheduling algorithm."""
 
 import datetime
+import random
 from io import StringIO
 
+from itertools import cycle
 import magic
 import pandas as pd
 
@@ -127,3 +129,58 @@ def get_students(a_day: bytes, b_day: bytes) -> dict[str, list]:
     b_day_students = pd.read_csv(StringIO(b_day.decode("utf-8"))).values.tolist()
 
     return {"a": a_day_students, "b": b_day_students}
+
+
+def schedule_shifts(
+    students: dict[str, list], days: list[datetime.date], min_employees: int
+) -> dict[datetime.date, list[str]]:
+    """Schedule shifts for students based on the provided days and constraints.
+
+    Args:
+        students (dict[str, list]): A dictionary with keys 'a' and 'b' containing student data.
+        days (list[datetime.date]): List of dates to schedule shifts for.
+        min_employees (int): Minimum number of employees required for each shift.
+    Returns:
+        dict[datetime.date, list[str]]: A dictionary mapping each date to a list of scheduled students.
+
+    """
+
+    def create_dictionary(shift_days: list[datetime.date], values: list):
+        """Create a schedule dictionary for the given shift days and student values.
+
+        Args:
+            shift_days (list[datetime.date]): List of dates to schedule shifts for.
+            values (list): List of student data to assign to shifts.
+        Returns:
+            dict[datetime.date, list[str]]: A dictionary mapping each date to a list of scheduled students.
+        """
+
+        schedule = {day.day: [] for day in shift_days}
+        cycled_values = cycle(values)
+        for day in shift_days:
+            schedule[day.day] = [next(cycled_values)[0] for _ in range(min_employees)]
+        return schedule
+
+    def get_schedule(students_scheduled: list, needed_employees: int, day_offset: int):
+        """Get the schedule for either A days or B days.
+
+        Args:
+            students_scheduled (list): List of student data to assign to shifts.
+            needed_employees (int): Total number of employees needed for the shifts.
+            day_offset (int): Offset to determine whether to schedule A days or B days.
+        Returns:
+            dict[datetime.date, list[str]]: A dictionary mapping each date to a list of scheduled students.
+        """
+        random.shuffle(students_scheduled)
+        shift_days = days[day_offset:needed_employees:2]
+        return create_dictionary(shift_days, students_scheduled)
+
+    total_days_split = len(days) // 2
+    total_needed_employees = (
+        total_days_split * min_employees
+    )  # Total employees needed for either A days or B days for the entire period
+
+    a_day_schedule = get_schedule(students["a"], total_needed_employees, 0)
+    b_day_schedule = get_schedule(students["b"], total_needed_employees, 1)
+    merged_dict = {**a_day_schedule, **b_day_schedule}
+    return dict(sorted(merged_dict.items()))
