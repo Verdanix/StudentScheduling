@@ -113,7 +113,13 @@ class Submission(BaseModel):
                 "One or both of the uploaded files are not usable CSV files."
             )
 
-    def swap_dates_if_necessary(self) -> None:
-        """Swap start_date and end_date if start_date is later than end_date."""
+    def fix_dates_if_necessary(self) -> None:
+        """Swaps the dates in case the start date is after the end date.
+        Additionally, sets the year and month of the end date to match the start date.
+        """
+        year = self.start_date.year
+        month = self.start_date.month
+        self.end_date = self.end_date.replace(year, month, self.end_date.day)
+
         if self.start_date > self.end_date:
             self.start_date, self.end_date = self.end_date, self.start_date
