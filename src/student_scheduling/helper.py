@@ -9,6 +9,8 @@ import icalendar
 import magic
 import pandas as pd
 
+from config.logging import logger
+
 
 def filter_weekends(dates: list[datetime.date]) -> list[datetime.date]:
     """Filter out weekends from a list of dates.
@@ -18,9 +20,18 @@ def filter_weekends(dates: list[datetime.date]) -> list[datetime.date]:
     Returns:
         list[datetime.date]: Filtered list of dates excluding weekends.
     """
-    return [
-        date for date in dates if date.weekday() < 5
-    ]  # 0-4 are weekdays, 5-6 are weekends
+    logger.debug("filter_weekends: Starting with %d dates.", len(dates))
+    logger.debug(
+        "filter_weekends: Input dates: %r%s", dates[:5], "..." if len(dates) > 5 else ""
+    )
+
+    filtered_dates = [date for date in dates if date.weekday() < 5]
+    logger.info(
+        "filter_weekends: Filtered %d weekends. Remaining: %d",
+        len(dates) - len(filtered_dates),
+        len(filtered_dates),
+    )
+    return filtered_dates
 
 
 def filter_excluded_dates(
@@ -34,6 +45,7 @@ def filter_excluded_dates(
     Returns:
         list[datetime.date]: Filtered list of dates.
     """
+    logger.debug("filter_excluded_dates: Filtering excluded dates: %r", excluded_dates)
     return [date for date in dates if date not in excluded_dates]
 
 
@@ -50,6 +62,9 @@ def filter_days(
     """
     dates = filter_weekends(dates)
     dates = filter_excluded_dates(dates, excluded_dates)
+    logger.info(
+        "filter_days: Filtered the weekends and removed any dates to be excluded."
+    )
     return dates
 
 
@@ -65,7 +80,20 @@ def get_days(start_day: datetime.date, end_day: datetime.date) -> list[datetime.
         list[datetime.date]: A list of dates from start_day to end_day.
     """
     delta = end_day - start_day
-    return [start_day + datetime.timedelta(days=i) for i in range(delta.days + 1)]
+    logger.debug(
+        "get_days: Generating dates from %s to %s. Total days: %d",
+        start_day,
+        end_day,
+        delta.days + 1,
+    )
+    days = [start_day + datetime.timedelta(days=i) for i in range(delta.days + 1)]
+    logger.debug(
+        "get_days: Generated %d days. Sample: %r%s",
+        len(days),
+        days[:5],
+        "..." if len(days) > 5 else "",
+    )
+    return days
 
 
 def csv_has_csv_mime_type(content: bytes) -> bool:
@@ -80,6 +108,10 @@ def csv_has_csv_mime_type(content: bytes) -> bool:
     max_file_size = 15 * 1024 * 1024  # 15 MB
 
     if len(content) > max_file_size:
+        logger.warning(
+            "csv_has_csv_mime_types: Uploaded file is greater than %.1fMB",
+            max_file_size,
+        )
         return False
 
     file_type = magic.from_buffer(content, mime=True)
@@ -99,9 +131,9 @@ def csv_has_2_columns(content: bytes) -> bool:
 
     try:
         df = pd.read_csv(StringIO(content.decode("utf-8")))
-        print(df.shape[1])
         return df.shape[1] == 2
     except Exception:
+        logger.warning("csv_has_2_columns: CSV file doesn't have exactly 2 columns.")
         return False
 
 
@@ -113,7 +145,16 @@ def csv_is_safe(content: bytes) -> bool:
     Returns:
         bool: True if the file is safe, False otherwise.
     """
-    return csv_has_csv_mime_type(content) and csv_has_2_columns(content)
+    safe_mime_type = csv_has_csv_mime_type(content)
+    has_2_columns = csv_has_2_columns(content)
+    is_safe = safe_mime_type and has_2_columns
+    if not is_safe:
+        logger.warning(
+            "csv_is_safe: Safe MIME: %r, Exactly 2 columns: %r",
+            safe_mime_type,
+            has_2_columns,
+        )
+    return is_safe
 
 
 def get_students(a_day: bytes, b_day: bytes) -> dict[str, list]:
@@ -177,12 +218,14 @@ def schedule_shifts(
         return create_dictionary(shift_days, students_scheduled)
 
     total_days_split = len(days) // 2
-    total_needed_employees = (
-        total_days_split * min_employees
-    )  # Total employees needed for either A days or B days for the entire period
 
+    # Total employees needed for either A days or B days for the entire period
+    total_needed_employees = total_days_split * min_employees
+
+    logger.debug("schedule_shifts: Total employees needed: %d", total_needed_employees)
     a_day_schedule = get_schedule(students["a"], total_needed_employees, 0)
     b_day_schedule = get_schedule(students["b"], total_needed_employees, 1)
+
     merged_dict = {**a_day_schedule, **b_day_schedule}
     return dict(sorted(merged_dict.items()))
 
@@ -198,6 +241,7 @@ def create_ics_file(schedule: dict, month: int, year: int) -> bytes:
         bytes: The ICS file in bytes.
     """
     calendar = icalendar.Calendar()
+
     # Compress the schedule data into a list of (day, student) tuples. Little cleaner
     compressed_data = [
         (day, student) for day, students in schedule.items() for student in students
