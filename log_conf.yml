@@ -1,0 +1,50 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+  default:
+    (): colorlog.ColoredFormatter
+    format: "[%(cyan)s%(asctime)s%(reset)s] [%(log_color)s%(levelname)s%(reset)s] %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  file:
+    format: "[%(asctime)s] [%(levelname)s] %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: default
+    stream: ext://sys.stderr
+
+  file:
+    class: concurrent_log_handler.ConcurrentRotatingFileHandler
+    level: DEBUG
+    formatter: file
+    filename: logs/log
+    maxBytes: 314572800  # 300MB
+    backupCount: 14
+    use_gzip: True
+
+loggers:
+  uvicorn:
+    level: INFO
+    handlers: [ console, file ]
+    propagate: False
+
+  uvicorn.access:
+    level: INFO
+    handlers: [ console, file ]
+    propagate: False
+
+  watchfiles.main:
+    level: DEBUG
+    handlers: [ ]
+    propagate: False
+
+  __main__:
+    level: DEBUG
+    handlers: [ console, file ]
+    propagate: False
+
+root:
+  level: DEBUG
+  handlers: [ console, file ]
