@@ -1,0 +1,23 @@
+# Runs pre-commit checks on pull requests to enforce code standards.
+# This ensures that all checks are made, especially for pull requests including web-based commits.
+name: Standards Enforcer
+on: [ pull_request ]
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v4
+      - uses: actions/cache@v3
+        name: Define a cache for the virtual environment based on the dependencies lock file
+        with:
+          path: ./.venv
+          key: venv-${{ hashFiles('poetry.lock') }}
+      - name: Install the project dependencies
+        run: poetry install
+      - name: Run Pre-commit
+        run: poetry run pre-commit
