@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from src.student_scheduling.helper import get_days, filter_days, filter_excluded_dates, csv_has_csv_mime_type
-from student_scheduling.helper import csv_has_2_columns, get_students, schedule_shifts
+from src.student_scheduling.helper import filter_weekends, get_days, filter_days, filter_excluded_dates, csv_has_csv_mime_type, csv_has_2_columns, get_students, schedule_shifts
 from student_scheduling.models import Submission
 
 ranges = {
@@ -41,7 +40,7 @@ def test_get_days_length():
 def test_filter_weekends():
     for range_id, (start_day, end_day) in ranges.items():
         days = get_days(start_day, end_day)
-        weekdays = [day for day in days if day.weekday() < 5]
+        weekdays = filter_weekends(days)
         print("Range ID:", range_id, "Weekdays Length:", len(weekdays))
         assert all(day.weekday() < 5 for day in weekdays)
 
