@@ -5,7 +5,7 @@ import datetime
 from fastapi import UploadFile
 from pydantic import BaseModel
 
-from student_scheduling.helper import csv_is_safe
+from student_scheduling.utils.csv_utils import csv_is_safe
 
 
 class HallPass(BaseModel):
