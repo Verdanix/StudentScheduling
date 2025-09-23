@@ -24,7 +24,7 @@ StudentScheduling's tech stack is based on the following dependencies:
 
 ## Testing
 To ensure the codebase remains reliable and maintainable, I follow a rigorous testing approach:
-- **Automated Testing**: Employ automated testing with `unittest` to increase efficiency and reduce manual effort.
+- **Automated Testing**: Employ automated testing with `PyTest` to increase efficiency and reduce manual effort.
 - **Unit Testing**: Conduct unit testing for individual components to validate internal logic.
 - **Integration Testing**: Perform integration testing for combined functionality to ensure seamless interactions between components.
 - **System Testing**: Conduct system testing for the entire system behavior to evaluate responsiveness, reliability, and capacity.
