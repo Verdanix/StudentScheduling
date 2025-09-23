@@ -17,10 +17,10 @@ To ensure consistency throughout the project, please follow these code styles gu
 
 ## Tech Stack
 StudentScheduling's tech stack is based on the following dependencies:
-- **Backend**: Utilize FastAPI for API routes.
-- **Frontend**: Utilize React and Tailwind for building user interfaces.
-- **Calendar Creation**: Utilize ICalendar for generating iCal files.
-- **Excel Handling**: Utilize OpenPyXL for reading and writing Excel files.
+- **Backend**: Utilize `FastAPI` for API routes.
+- **Frontend**: Utilize `React and Tailwind` for building user interfaces.
+- **Calendar Creation**: Utilize `ICalendar` for generating iCal files.
+- **CSV Handling**: Utilize `Pandas` for reading and writing CSV files.
 
 ## Testing
 To ensure the codebase remains reliable and maintainable, I follow a rigorous testing approach:
@@ -54,7 +54,6 @@ A CI/CD pipeline automates the build and deployment process, reducing errors and
 ## Infrastructure and Monitoring
 The necessary infrastructure includes:
 - **Development, Testing, and Production Environments**: Identical configurations to replicate production-like conditions.
-- **Regular Backups**: Backups will be created (in the form of zipped files) when running the update script, allowing for manual rollbacks if needed.
 
 ## Contributing Guidelines
 1. Fork the repository and create a new branch.
