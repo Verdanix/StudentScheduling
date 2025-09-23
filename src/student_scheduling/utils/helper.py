@@ -1,4 +1,4 @@
-"""Helper functions for the scheduling algorithm."""
+"""Helper functions for the ICS generation."""
 
 import datetime
 
