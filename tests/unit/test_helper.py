@@ -3,7 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from src.student_scheduling.helper import filter_weekends, get_days, filter_days, filter_excluded_dates, csv_has_csv_mime_type, csv_has_2_columns, get_students, schedule_shifts
+from src.student_scheduling.utils.date_utils import filter_weekends, filter_days, filter_excluded_dates, get_days
+from src.student_scheduling.helper import csv_has_csv_mime_type, csv_has_2_columns, get_students, schedule_shifts
 from student_scheduling.models import Submission
 
 ranges = {
