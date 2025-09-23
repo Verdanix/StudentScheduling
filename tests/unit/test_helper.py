@@ -4,7 +4,8 @@ from pathlib import Path
 import pytest
 
 from src.student_scheduling.utils.date_utils import filter_days, get_days
-from src.student_scheduling.helper import csv_has_csv_mime_type, csv_has_2_columns, get_students, schedule_shifts
+from src.student_scheduling.utils.csv_utils import csv_has_csv_mime_type, csv_has_2_columns, get_students
+from src.student_scheduling.helper import schedule_shifts
 from student_scheduling.models import Submission
 
 from tests.unit.data import ranges, csv
