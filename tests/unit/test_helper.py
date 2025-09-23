@@ -21,7 +21,6 @@ csv = {
 
 
 def test_get_days_content():
-    """Test get_days for all predefined ranges."""
     for range_id, (start_day, end_day) in ranges.items():
         days = get_days(start_day, end_day)
         for i, day in enumerate(days):
@@ -30,7 +29,6 @@ def test_get_days_content():
 
 
 def test_get_days_length():
-    """Test get_days for all predefined ranges."""
     for range_id, (start_day, end_day) in ranges.items():
         days = get_days(start_day, end_day)
         print("Range ID:", range_id, "Days Length:", len(days))
