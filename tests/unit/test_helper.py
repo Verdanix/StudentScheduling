@@ -5,7 +5,7 @@ import pytest
 
 from src.student_scheduling.utils.date_utils import filter_days, get_days
 from src.student_scheduling.utils.csv_utils import get_students
-from src.student_scheduling.helper import schedule_shifts
+from src.student_scheduling.utils.scheduling_utils import schedule_shifts
 from student_scheduling.models import Submission
 
 from tests.unit.data import ranges, csv
